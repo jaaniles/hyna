@@ -9,6 +9,7 @@ const app = initializeApp({
   messagingSenderId: process.env.firebaseMessagingSenderId,
   appId: process.env.firebaseAppId,
 });
+
 const auth = getAuth(app);
 
 setPersistence(auth, inMemoryPersistence);

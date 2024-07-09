@@ -1,5 +1,5 @@
 import { ActionFunction } from "@remix-run/node";
-import { redirect, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   GoogleAuthProvider,
@@ -9,9 +9,8 @@ import {
 } from "firebase/auth";
 import { SyntheticEvent } from "react";
 
-import { session } from "~/cookie";
 import { auth as clientAuth } from "~/firebase.client";
-import { auth as serverAuth } from "~/firebase.server";
+import { createUserSession } from "~/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -21,18 +20,7 @@ export const action: ActionFunction = async ({ request }) => {
     return null;
   }
 
-  await serverAuth.verifyIdToken(idToken);
-
-  const jwt = await serverAuth.createSessionCookie(idToken, {
-    // 5 days
-    expiresIn: 60 * 60 * 24 * 5 * 1000,
-  });
-
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await session.serialize(jwt),
-    },
-  });
+  return createUserSession(idToken, "/");
 };
 
 export default function Login() {

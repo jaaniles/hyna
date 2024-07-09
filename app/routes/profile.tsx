@@ -1,32 +1,20 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Link, redirect, useLoaderData } from "@remix-run/react";
-import { session } from "~/cookie";
-import { auth as serverAuth } from "~/firebase.server";
+import { getUserSession } from "~/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const jwt = await session.parse(request.headers.get("Cookie"));
+  const sessionUser = await getUserSession(request);
 
-  if (!jwt) {
+  if (!sessionUser) {
     return redirect("/login");
   }
 
-  try {
-    const token = await serverAuth.verifySessionCookie(jwt);
-
-    if (!token) {
-      redirect("/login");
-    }
-
-    return {
-      loggedIn: true,
-      user: {
-        email: token.email,
-        id: token.uid,
-      },
-    };
-  } catch (e) {
-    return redirect("/logout");
-  }
+  return {
+    user: {
+      email: sessionUser.email,
+      id: sessionUser.id,
+    },
+  };
 };
 
 export default function Profile() {
