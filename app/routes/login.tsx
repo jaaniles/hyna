@@ -110,7 +110,6 @@ const styles = stylex.create({
   },
   input: {
     width: "100%",
-    heigth: 32,
   },
 
   submit: {
