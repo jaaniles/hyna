@@ -29,11 +29,31 @@ const storage = createCookieSessionStorage({
   },
 });
 
-const isFirstLogin = async (uid: string) => {
-  const snapshot = await db.collection("users").doc(uid).get();
+export async function requireUserSession(request: Request) {
+  const cookieSession = await storage.getSession(request.headers.get("Cookie"));
+  const token = cookieSession.get("token");
 
-  return !!snapshot;
-};
+  if (!token) {
+    throw redirect("/login");
+  }
+
+  const tokenUser = await serverAuth.verifySessionCookie(token, true);
+
+  if (!tokenUser) {
+    throw redirect("/login");
+  }
+
+  const userProfile = await getSessionUserProfile(request);
+
+  if (!userProfile) {
+    throw redirect("/register");
+  }
+
+  return {
+    tokenUser,
+    user: userProfile,
+  };
+}
 
 export async function getUserSession(request: Request) {
   const cookieSession = await storage.getSession(request.headers.get("Cookie"));
@@ -52,14 +72,32 @@ export async function getUserSession(request: Request) {
   }
 }
 
+export async function getSessionUserProfile(request: Request) {
+  const sessionUser = await getUserSession(request);
+
+  if (!sessionUser || !sessionUser.uid) {
+    redirect("/login");
+  }
+
+  const uid = sessionUser?.uid as string;
+
+  const docSnapshot = await db.collection("users").doc(uid).get();
+
+  if (!docSnapshot.exists) {
+    console.log("User profile not found");
+    return null;
+  } else {
+    const user = docSnapshot.data();
+    return user;
+  }
+}
+
 export async function createUserSession(idToken: string, redirectTo: string) {
   const token = await getSessionToken(idToken);
   const session = await storage.getSession();
   session.set("token", token);
 
-  const user = await serverAuth.verifySessionCookie(token);
-
-  return redirect((await isFirstLogin(user.uid)) ? "/register" : redirectTo, {
+  return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session),
     },

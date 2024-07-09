@@ -1,34 +1,24 @@
-import { LoaderFunction } from "@remix-run/node";
-import { Link, redirect } from "@remix-run/react";
-import { db } from "~/firebase.server";
-import { getUserSession } from "~/session.server";
+import { json, LoaderFunction } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
+import { requireUserSession } from "~/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const sessionUser = await getUserSession(request);
+  const { tokenUser, user } = await requireUserSession(request);
 
-  if (!sessionUser) {
-    return redirect("/login");
-  }
-
-  const querySnapshot = await db.collection("posts").get();
-
-  const data = [] as unknown[];
-  querySnapshot.forEach((doc) => {
-    data.push({ ...doc.data(), id: doc.id });
+  return json({
+    email: tokenUser.email,
+    username: user.username,
   });
-
-  return {
-    user: {
-      email: sessionUser.email,
-      id: sessionUser.id,
-    },
-  };
 };
 
 export default function Profile() {
+  const { email, username } = useLoaderData<typeof loader>();
+
   return (
     <div>
       <h1>Profile</h1>
+      <p>{username}</p>
+      <p>{email}</p>
 
       <Link to="/profile">Profile</Link>
       <Link to="/login">Login</Link>
