@@ -8,8 +8,8 @@ import {
   UserCredential,
 } from "firebase/auth";
 import { SyntheticEvent } from "react";
-import { auth } from "~/firebase.client";
 
+import { auth } from "~/firebase.client";
 import { createUserSession } from "~/session.server";
 
 export const action: ActionFunction = async ({ request }) => {

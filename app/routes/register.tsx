@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
+
 import { registerUser } from "~/auth/auth";
 import { getUserSession } from "~/session.server";
 

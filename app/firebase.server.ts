@@ -8,10 +8,9 @@ import {
 } from "firebase-admin/app";
 import admin from "firebase-admin";
 import { Auth, getAuth } from "firebase-admin/auth";
+import { Firestore } from "firebase-admin/firestore";
 
 import serviceAccount from "./service-account.json";
-
-import { Firestore } from "firebase-admin/firestore";
 
 export const SESSION_EXPIRY = 60 * 60 * 24 * 14 * 1000;
 
