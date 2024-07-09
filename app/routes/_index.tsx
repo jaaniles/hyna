@@ -13,6 +13,7 @@ import {
   getDeposits,
 } from "~/deposit/depositRequest";
 import { useState } from "react";
+import { requireUserSession } from "~/session.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,6 +35,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  await requireUserSession(request);
+
   const deposits = await getDeposits(request);
 
   return json({
@@ -50,8 +53,6 @@ export default function Index() {
   const handleCustomDateChange = (checked: boolean) => {
     setShowCustomDate(!checked);
   };
-
-  console.log(deposits);
 
   return (
     <div {...stylex.props(styles.root)}>
