@@ -8,8 +8,8 @@ import {
   UserCredential,
 } from "firebase/auth";
 import { SyntheticEvent } from "react";
+import { auth } from "~/firebase.client";
 
-import { auth as clientAuth } from "~/firebase.client";
 import { createUserSession } from "~/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -39,7 +39,7 @@ export default function Login() {
 
     try {
       const credential = await signInWithEmailAndPassword(
-        clientAuth,
+        auth,
         email,
         password
       );
@@ -52,9 +52,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    signInWithPopup(clientAuth, new GoogleAuthProvider()).then(
-      onProviderSignIn
-    );
+    signInWithPopup(auth, new GoogleAuthProvider()).then(onProviderSignIn);
   };
 
   async function onProviderSignIn(credential: UserCredential) {

@@ -4,7 +4,7 @@ import {
   redirect,
 } from "@remix-run/node";
 
-import { auth as serverAuth, SESSION_EXPIRY } from "~/firebase.server";
+import { db, auth as serverAuth, SESSION_EXPIRY } from "~/firebase.server";
 
 const cookieSecret = process.env.cookieSecret || "";
 
@@ -29,6 +29,12 @@ const storage = createCookieSessionStorage({
   },
 });
 
+const isFirstLogin = async (uid: string) => {
+  const snapshot = await db.collection("users").doc(uid).get();
+
+  return !!snapshot;
+};
+
 export async function getUserSession(request: Request) {
   const cookieSession = await storage.getSession(request.headers.get("Cookie"));
   const token = cookieSession.get("token");
@@ -39,6 +45,7 @@ export async function getUserSession(request: Request) {
 
   try {
     const tokenUser = await serverAuth.verifySessionCookie(token, true);
+
     return tokenUser;
   } catch (error) {
     return null;
@@ -50,7 +57,9 @@ export async function createUserSession(idToken: string, redirectTo: string) {
   const session = await storage.getSession();
   session.set("token", token);
 
-  return redirect(redirectTo, {
+  const user = await serverAuth.verifySessionCookie(token);
+
+  return redirect((await isFirstLogin(user.uid)) ? "/register" : redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session),
     },
@@ -64,4 +73,15 @@ async function getSessionToken(idToken: string) {
   }
 
   return serverAuth.createSessionCookie(idToken, { expiresIn: SESSION_EXPIRY });
+}
+
+export async function destroySession(request: Request) {
+  const session = await storage.getSession(request.headers.get("Cookie"));
+  const newCookie = await storage.destroySession(session);
+
+  return redirect("/login", { headers: { "Set-Cookie": newCookie } });
+}
+
+export async function signOut(request: Request) {
+  return await destroySession(request);
 }

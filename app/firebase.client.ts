@@ -1,17 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, inMemoryPersistence, setPersistence } from "firebase/auth";
 
-const app = initializeApp({
-  apiKey: process.env.firebaseApiKey,
-  authDomain: process.env.firebaseAuthDomain,
-  projectId: process.env.firebaseProjectId,
-  storageBucket: process.env.firebaseStorageBucket,
-  messagingSenderId: process.env.firebaseMessagingSenderId,
-  appId: process.env.firebaseAppId,
-});
+import firebaseConfig from "./firebase-config.json";
+
+const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
+// Let Remix handle the persistence via session cookies.
 setPersistence(auth, inMemoryPersistence);
 
 export { auth };

@@ -1,5 +1,6 @@
 import { LoaderFunction } from "@remix-run/node";
-import { Link, redirect, useLoaderData } from "@remix-run/react";
+import { Link, redirect } from "@remix-run/react";
+import { db } from "~/firebase.server";
 import { getUserSession } from "~/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -8,6 +9,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!sessionUser) {
     return redirect("/login");
   }
+
+  const querySnapshot = await db.collection("posts").get();
+
+  const data = [] as unknown[];
+  querySnapshot.forEach((doc) => {
+    data.push({ ...doc.data(), id: doc.id });
+  });
 
   return {
     user: {
@@ -18,12 +26,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Profile() {
-  const { user } = useLoaderData<typeof loader>();
-
   return (
     <div>
       <h1>Profile</h1>
-      <p>Hello, {user.email}</p>
 
       <Link to="/profile">Profile</Link>
       <Link to="/login">Login</Link>

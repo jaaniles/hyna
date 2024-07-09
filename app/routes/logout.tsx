@@ -1,12 +1,6 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
-import { session } from "~/session.server";
+import { LoaderFunction } from "@remix-run/node";
+import { signOut } from "~/session.server";
 
-export const loader: LoaderFunction = async () => {
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await session.serialize("", {
-        expires: new Date(0),
-      }),
-    },
-  });
+export const loader: LoaderFunction = async ({ request }) => {
+  return await signOut(request);
 };

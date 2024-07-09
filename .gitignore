@@ -4,3 +4,4 @@ node_modules
 /build
 .env
 app/service-account.json
+app/firebase-config.json
