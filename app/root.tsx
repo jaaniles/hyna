@@ -12,6 +12,7 @@ import "./root.css";
 
 export const loader = () => {
   return json({
+    cookieSecret: process.env.COOKIE_SECRET,
     firebaseConfig: {
       apiKey: process.env.FIREBASE_API_KEY,
       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -24,7 +25,7 @@ export const loader = () => {
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { firebaseConfig } = useLoaderData<typeof loader>();
+  const { firebaseConfig, cookieSecret } = useLoaderData<typeof loader>();
 
   return (
     <html lang="en">
@@ -37,6 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: `window.process = ${JSON.stringify({
               env: {
+                cookieSecret: cookieSecret,
                 firebaseApiKey: firebaseConfig.apiKey,
                 firebaseAuthDomain: firebaseConfig.authDomain,
                 firebaseProjectId: firebaseConfig.projectId,
