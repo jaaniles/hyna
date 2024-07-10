@@ -4,13 +4,31 @@ import {
   LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
-import { getDepositById, updateDeposit } from "~/deposit/deposit";
+import { Link, useLoaderData } from "@remix-run/react";
+import { DeleteDepositForm } from "~/deposit/DeleteDepositForm";
+import {
+  deleteDeposit,
+  getDepositById,
+  updateDeposit,
+} from "~/deposit/deposit";
+import { EditDepositForm } from "~/deposit/EditDepositForm";
 import { requireUserSession } from "~/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = new URLSearchParams(await request.text());
+  const formData = await request.formData();
+  const intent = formData.get("intent");
 
+  switch (intent) {
+    case "edit":
+      return await updateDepositAction(request, formData);
+    case "delete":
+      return await deleteDepositAction(request, formData);
+    default:
+      throw new Error("Unexpected action intent");
+  }
+};
+
+const updateDepositAction = async (request: Request, formData: FormData) => {
   const depositId = formData.get("depositId");
   const amount = formData.get("amount");
   const date = formData.get("date");
@@ -19,9 +37,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return redirect("/");
   }
 
-  await updateDeposit({ request, depositId, amount: Number(amount), date });
+  await updateDeposit({
+    request,
+    depositId: depositId as string,
+    amount: Number(amount),
+    date: date as string,
+  });
 
   return redirect(`/deposit/${depositId}/edit`);
+};
+
+const deleteDepositAction = async (request: Request, formData: FormData) => {
+  const depositId = formData.get("depositId");
+  await deleteDeposit({ request, depositId: depositId as string });
+
+  return redirect("/");
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
@@ -55,12 +85,9 @@ export default function EditDeposit() {
       <p>{deposit.depositId}</p>
       <p>{deposit.amount}</p>
       <p>{deposit.date}</p>
-      <Form method="patch">
-        <input type="number" name="amount" defaultValue={deposit.amount} />
-        <input type="date" name="date" defaultValue={deposit.date} />
-        <input type="hidden" name="depositId" value={deposit.depositId} />
-        <button type="submit">Update</button>
-      </Form>
+
+      <EditDepositForm deposit={deposit} />
+      <DeleteDepositForm deposit={deposit} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div>{children}</div>
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{

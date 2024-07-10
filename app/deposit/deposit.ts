@@ -3,7 +3,7 @@ import { db } from "~/firebase.server";
 import { requireUserSession } from "~/session.server";
 
 export type DepositItem = {
-  uid: string;
+  depositId: string;
   amount: number;
   date: string;
 };
@@ -21,7 +21,7 @@ export async function getDeposits(request: Request) {
 
   for (const doc of docSnapshot.docs) {
     data.push({
-      uid: doc.id,
+      depositId: doc.id,
       amount: doc.data().amount,
       date: doc.data().date,
     });
@@ -87,8 +87,6 @@ export async function updateDeposit({
   requireUserSession(request);
 
   await db.collection("deposits").doc(depositId).update({ amount, date });
-
-  return redirect("/");
 }
 
 export async function deleteDeposit({
@@ -101,6 +99,4 @@ export async function deleteDeposit({
   requireUserSession(request);
 
   await db.collection("deposits").doc(depositId).delete();
-
-  return redirect("/");
 }
