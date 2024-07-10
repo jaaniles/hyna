@@ -50,7 +50,8 @@ export async function requireUserSession(request: Request) {
   }
 
   return {
-    tokenUser,
+    uid: tokenUser.uid,
+    email: tokenUser.email,
     user: userProfile,
   };
 }

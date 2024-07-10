@@ -1,6 +1,6 @@
 import { redirect } from "@remix-run/node";
 import { db } from "~/firebase.server";
-import { getUserSession } from "~/session.server";
+import { requireUserSession } from "~/session.server";
 
 export type DepositItem = {
   uid: string;
@@ -9,12 +9,7 @@ export type DepositItem = {
 };
 
 export async function getDeposits(request: Request) {
-  const sessionUser = await getUserSession(request);
-
-  if (!sessionUser) {
-    redirect("/login");
-    return;
-  }
+  const sessionUser = await requireUserSession(request);
 
   const docSnapshot = await db
     .collection("deposits")
@@ -41,12 +36,7 @@ export async function getDepositById({
   request: Request;
   depositId: string;
 }) {
-  const sessionUser = await getUserSession(request);
-
-  if (!sessionUser) {
-    redirect("/login");
-    return;
-  }
+  requireUserSession(request);
 
   const docSnapshot = await db.collection("deposits").doc(depositId).get();
 
@@ -73,12 +63,7 @@ export async function createDeposit({
   amount: number;
   date: string;
 }) {
-  const sessionUser = await getUserSession(request);
-
-  if (!sessionUser) {
-    redirect("/login");
-    return;
-  }
+  const sessionUser = await requireUserSession(request);
 
   const docRef = db.collection("deposits").doc();
 
@@ -98,12 +83,7 @@ export async function updateDeposit({
   date: string;
   depositId: string;
 }) {
-  const sessionUser = await getUserSession(request);
-
-  if (!sessionUser) {
-    redirect("/login");
-    return;
-  }
+  requireUserSession(request);
 
   await db.collection("deposits").doc(depositId).update({ amount, date });
 
@@ -117,12 +97,7 @@ export async function deleteDeposit({
   request: Request;
   depositId: string;
 }) {
-  const sessionUser = await getUserSession(request);
-
-  if (!sessionUser) {
-    redirect("/login");
-    return;
-  }
+  requireUserSession(request);
 
   await db.collection("deposits").doc(depositId).delete();
 
