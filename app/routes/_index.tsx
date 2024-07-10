@@ -4,15 +4,15 @@ import {
   defer,
   redirect,
 } from "@remix-run/node";
-import { Await, Link, useLoaderData } from "@remix-run/react";
+import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { createDeposit, DepositItem, getDeposits } from "~/deposit/deposit";
 import { DepositForm } from "~/deposit/DepositForm";
 import { Deposits } from "~/deposit/Deposits";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { getUserSession } from "~/session.server";
-import { getUserById } from "~/auth/auth";
+import { getUserById, User } from "~/auth/auth";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -37,20 +37,17 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/login");
   }
 
-  const userProfile = await getUserById({ request, uid: sessionUser.uid });
-  if (!userProfile) {
-    return redirect("/register");
-  }
-
+  const userProfile = getUserById({ request, uid: sessionUser.uid });
   const deposits = getDeposits(request);
 
   return defer({
     deposits,
+    userProfile,
   });
 };
 
 export default function Index() {
-  const { deposits } = useLoaderData<typeof loader>();
+  const { deposits, userProfile } = useLoaderData<typeof loader>();
 
   return (
     <div {...stylex.props(styles.root)}>
@@ -67,10 +64,25 @@ export default function Index() {
         <Await resolve={deposits}>
           {(deposits) => <Deposits deposits={deposits as DepositItem[]} />}
         </Await>
+        <Await resolve={userProfile}>
+          {(userProfile: User) => <RequireProfile userProfile={userProfile} />}
+        </Await>
       </Suspense>
     </div>
   );
 }
+
+const RequireProfile = ({ userProfile }: { userProfile: User }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userProfile) {
+      navigate("/register");
+    }
+  }, [userProfile, navigate]);
+
+  return null;
+};
 
 const Skeleton = () => {
   return <div>Loading...</div>;

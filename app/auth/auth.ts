@@ -15,6 +15,10 @@ type GetUserProps = {
   uid: string;
 };
 
+export type User = {
+  username: string;
+};
+
 export async function getUserById({ request, uid }: GetUserProps) {
   await requireUserSession(request);
 
@@ -24,7 +28,7 @@ export async function getUserById({ request, uid }: GetUserProps) {
     return null;
   } else {
     const user = docSnapshot.data();
-    return user;
+    return user as User;
   }
 }
 

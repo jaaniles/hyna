@@ -42,7 +42,7 @@ export const PageLoadingIndicator = () => {
           scope.current,
           {
             opacity: 1,
-            width: "100%",
+            width: "35%",
             x: "100%",
           },
           { ease: "easeIn", repeat: Infinity, duration: 3.5 }
