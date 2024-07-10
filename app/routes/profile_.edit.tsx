@@ -4,7 +4,7 @@ import {
   LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
 import { updateProfile } from "~/auth/auth";
 import { requireUserSession } from "~/session.server";
 
@@ -36,7 +36,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function EditProfile() {
+  const navigation = useNavigation();
+
   const { username } = useLoaderData<typeof loader>();
+  const isUpdating = navigation.formAction === `/profile/edit`;
 
   return (
     <div>
@@ -49,11 +52,13 @@ export default function EditProfile() {
       <Link to="/logout">Logout</Link>
 
       <Form method="patch">
-        <label htmlFor="username">
-          Username
-          <input type="text" name="username" defaultValue={username} />
-        </label>
-        <button type="submit">Update</button>
+        <fieldset disabled={isUpdating}>
+          <label htmlFor="username">
+            Username
+            <input type="text" name="username" defaultValue={username} />
+          </label>
+          <button type="submit">{isUpdating ? "Updating..." : "Update"}</button>
+        </fieldset>
       </Form>
     </div>
   );

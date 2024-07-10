@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useNavigation } from "@remix-run/react";
 
 import { registerUser } from "~/auth/auth";
 import { getUserSession } from "~/session.server";
@@ -7,12 +7,10 @@ import { getUserSession } from "~/session.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userSession = await getUserSession(request);
 
-  if (!userSession || userSession.uid === undefined) {
-    redirect("/login");
-  }
-
   const formData = await request.formData();
   const username = formData.get("username") as string;
+
+  console.log("plom?", username);
 
   if (!username) {
     return null;
@@ -30,16 +28,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Register() {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.formAction === `/register`;
+
   return (
     <div>
       <h1>Register form</h1>
 
       <Form method="post">
-        <div>
+        <fieldset disabled={isSubmitting}>
           <label htmlFor="username">username</label>
           <input type="text" id="username" name="username" />
-        </div>
-        <button type="submit">Register me</button>
+          <button type="submit">
+            {isSubmitting ? "Registering..." : "Register"}
+          </button>
+        </fieldset>
       </Form>
 
       <Link to="/profile">Profile</Link>

@@ -28,8 +28,6 @@ export async function getUserById({ request, uid }: GetUserProps) {
 }
 
 export async function registerUser({ request, user }: RegisterUserProps) {
-  await requireUserSession(request);
-
   const { username, uid } = user;
 
   const docRef = db.collection("users").doc(uid);

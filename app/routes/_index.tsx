@@ -1,9 +1,4 @@
-import {
-  LoaderFunction,
-  MetaFunction,
-  ActionFunctionArgs,
-  defer,
-} from "@remix-run/node";
+import { LoaderFunction, ActionFunctionArgs, defer } from "@remix-run/node";
 import { Await, json, Link, useLoaderData } from "@remix-run/react";
 import * as stylex from "@stylexjs/stylex";
 
@@ -12,13 +7,6 @@ import { requireUserSession } from "~/session.server";
 import { DepositForm } from "~/deposit/DepositForm";
 import { Deposits } from "~/deposit/Deposits";
 import { Suspense } from "react";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Hyna" },
-    { name: "description", content: "One of the apps of your life!" },
-  ];
-};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();

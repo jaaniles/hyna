@@ -2,6 +2,7 @@ import {
   json,
   Links,
   Meta,
+  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -9,6 +10,13 @@ import {
 } from "@remix-run/react";
 
 import "./root.css";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Hyna" },
+    { name: "description", content: "One of the apps of your life!" },
+  ];
+};
 
 export async function loader() {
   return json({
