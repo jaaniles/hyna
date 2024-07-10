@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useNavigation } from "@remix-run/react";
 import { DepositItem } from "./deposit";
 import stylex from "@stylexjs/stylex";
 
@@ -7,8 +7,17 @@ type Props = {
 };
 
 export const Deposits = ({ deposits }: Props) => {
+  const navigation = useNavigation();
+
+  const isCreating = navigation.formAction === "/?index";
+
   return (
     <div>
+      {isCreating && (
+        <div {...stylex.props(styles.deposit, styles.skeleton)}>
+          Securing deposit..
+        </div>
+      )}
       {deposits.map((deposit: DepositItem) => {
         return (
           <div key={deposit.depositId} {...stylex.props(styles.deposit)}>
@@ -27,5 +36,9 @@ export const Deposits = ({ deposits }: Props) => {
 const styles = stylex.create({
   deposit: {
     padding: 24,
+  },
+  skeleton: {
+    height: 100,
+    width: "100%",
   },
 });

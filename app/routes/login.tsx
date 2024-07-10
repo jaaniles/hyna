@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userSession = getUserSession(request);
+  const userSession = await getUserSession(request);
 
   return json({
     loggedIn: !!userSession,

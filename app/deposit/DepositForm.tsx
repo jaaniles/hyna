@@ -46,7 +46,7 @@ export const DepositForm = () => {
             </label>
           </div>
 
-          <button type="submit" name="intent" value="create">
+          <button type="submit">
             {isSubmitting ? "Creating..." : "Create"}
           </button>
         </fieldset>

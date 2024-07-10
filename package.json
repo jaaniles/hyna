@@ -19,6 +19,7 @@
     "@stylexjs/stylex": "^0.7.5",
     "firebase": "^10.12.3",
     "firebase-admin": "^12.2.0",
+    "framer-motion": "^11.2.14",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

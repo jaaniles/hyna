@@ -1,12 +1,17 @@
-import { LoaderFunction, ActionFunctionArgs, defer } from "@remix-run/node";
+import {
+  LoaderFunction,
+  ActionFunctionArgs,
+  defer,
+  redirect,
+} from "@remix-run/node";
 import { Await, json, Link, useLoaderData } from "@remix-run/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { createDeposit, DepositItem, getDeposits } from "~/deposit/deposit";
-import { requireUserSession } from "~/session.server";
 import { DepositForm } from "~/deposit/DepositForm";
 import { Deposits } from "~/deposit/Deposits";
 import { Suspense } from "react";
+import { getUserSession } from "~/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -27,8 +32,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await requireUserSession(request);
-  const deposits = await getDeposits(request);
+  const sessionUser = await getUserSession(request);
+
+  if (!sessionUser) {
+    return redirect("/login");
+  }
+
+  const deposits = getDeposits(request);
 
   return defer({
     deposits,

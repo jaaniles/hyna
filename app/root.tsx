@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 
 import "./root.css";
+import { PageLoadingIndicator } from "./ui/loading/PageLoadingIndicator";
 
 export const meta: MetaFunction = () => {
   return [
@@ -39,7 +40,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div>{children}</div>
+        <div>
+          <PageLoadingIndicator />
+          {children}
+        </div>
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
