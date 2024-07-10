@@ -8,10 +8,11 @@ import * as stylex from "@stylexjs/stylex";
 import * as Switch from "@radix-ui/react-switch";
 
 import {
-  depositAmount,
+  deleteDeposit,
+  createDeposit,
   DepositItem,
   getDeposits,
-} from "~/deposit/depositRequest";
+} from "~/deposit/deposit";
 import { useState } from "react";
 import { requireUserSession } from "~/session.server";
 
@@ -24,14 +25,36 @@ export const meta: MetaFunction = () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
+  const intent = formData.get("intent");
+
+  switch (intent) {
+    case "create":
+      return await createDepositAction(request, formData);
+    case "delete":
+      return await deleteDepositAction(request, formData);
+    default:
+      throw new Error("Unexpected action intent");
+  }
+};
+
+const createDepositAction = async (request: Request, formData: FormData) => {
   const amount = formData.get("amount");
   const date = formData.get("date");
 
-  return await depositAmount({
+  await createDeposit({
     request,
     amount: Number(amount),
     date: date as string,
   });
+
+  return json({ message: "Deposit created" });
+};
+
+const deleteDepositAction = async (request: Request, formData: FormData) => {
+  const depositId = formData.get("depositId");
+  await deleteDeposit({ request, depositId: depositId as string });
+
+  return json({ message: "Deposit deleted" });
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -58,6 +81,7 @@ export default function Index() {
     <div {...stylex.props(styles.root)}>
       <h1>Entry</h1>
 
+      <Link to="/">Home</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/login">Login</Link>
       <Link to="/logout">Logout</Link>
@@ -89,20 +113,28 @@ export default function Index() {
             </label>
           </div>
 
-          <button type="submit">Deposit</button>
+          <button type="submit" name="intent" value="create">
+            Deposit
+          </button>
         </Form>
       </div>
 
       <div>
-        {deposits.map((deposit: DepositItem) => (
-          <div
-            key={`${deposit.amount}${deposit.date}`}
-            {...stylex.props(styles.deposit)}
-          >
-            <p>Amount: {deposit.amount}</p>
-            <p>Date: {deposit.date}</p>
-          </div>
-        ))}
+        {deposits.map((deposit: DepositItem) => {
+          return (
+            <Form method="post" key={`${deposit.uid}`}>
+              <div {...stylex.props(styles.deposit)}>
+                <Link to={`/deposit/${deposit.uid}/edit`}>{deposit.uid}</Link>
+                <p>Amount: {deposit.amount}</p>
+                <p>Date: {deposit.date}</p>
+                <input type="hidden" name="depositId" value={deposit.uid} />
+                <button type="submit" name="intent" value="delete">
+                  delete
+                </button>
+              </div>
+            </Form>
+          );
+        })}
       </div>
     </div>
   );
