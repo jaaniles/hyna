@@ -1,5 +1,5 @@
-import { ActionFunction } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   GoogleAuthProvider,
@@ -10,7 +10,7 @@ import {
 import { SyntheticEvent } from "react";
 
 import { auth } from "~/firebase.client";
-import { createUserSession } from "~/session.server";
+import { createUserSession, getUserSession } from "~/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -23,7 +23,16 @@ export const action: ActionFunction = async ({ request }) => {
   return createUserSession(idToken, "/");
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const userSession = getUserSession(request);
+
+  return json({
+    loggedIn: !!userSession,
+  });
+};
+
 export default function Login() {
+  const { loggedIn } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -63,6 +72,7 @@ export default function Login() {
   return (
     <div {...stylex.props(styles.root)}>
       <h1>This is login</h1>
+      {loggedIn && <p>You are already logged in by the way</p>}
 
       <button onClick={handleGoogleLogin}>Sign in with Google</button>
 
