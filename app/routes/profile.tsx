@@ -1,10 +1,20 @@
-import { json, LoaderFunction } from "@remix-run/node";
+import { json, LoaderFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { requireUserSession } from "~/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { email, user } = await requireUserSession(request);
+  const userSession = await requireUserSession(request);
+
+  if (!userSession) {
+    return redirect("/login");
+  }
+
+  const { email, user } = userSession;
+
+  if (!user) {
+    return redirect("/register");
+  }
 
   return json({
     email: email,

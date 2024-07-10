@@ -1,3 +1,4 @@
+import { redirect } from "@remix-run/node";
 import { db } from "~/firebase.server";
 import { requireUserSession } from "~/session.server";
 
@@ -20,7 +21,7 @@ export async function getUserById({ request, uid }: GetUserProps) {
   const docSnapshot = await db.collection("users").doc(uid).get();
 
   if (!docSnapshot.exists) {
-    throw Error("User not found");
+    return null;
   } else {
     const user = docSnapshot.data();
     return user;
@@ -46,12 +47,15 @@ export async function updateProfile({
   };
 }) {
   const sessionUser = await requireUserSession(request);
-  const { uid } = sessionUser;
+
+  if (!sessionUser) {
+    return redirect("/login");
+  }
 
   const { username } = user;
 
-  const docRef = db.collection("users").doc(uid);
+  const docRef = db.collection("users").doc(sessionUser?.uid);
   await docRef.update({ username });
 
-  return getUserById({ request, uid });
+  return redirect("/profile");
 }

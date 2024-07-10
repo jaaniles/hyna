@@ -11,6 +11,10 @@ export type DepositItem = {
 export async function getDeposits(request: Request) {
   const sessionUser = await requireUserSession(request);
 
+  if (!sessionUser || !sessionUser?.uid) {
+    return [];
+  }
+
   const docSnapshot = await db
     .collection("deposits")
     .orderBy("date", "desc")
@@ -18,6 +22,12 @@ export async function getDeposits(request: Request) {
     .get();
 
   const data: DepositItem[] = [];
+
+  console.log("DOKKO SNAPSHOTTO?", docSnapshot);
+
+  if (docSnapshot.empty) {
+    return [];
+  }
 
   for (const doc of docSnapshot.docs) {
     data.push({
@@ -65,6 +75,10 @@ export async function createDeposit({
   date: string;
 }) {
   const sessionUser = await requireUserSession(request);
+
+  if (!sessionUser) {
+    return redirect("/login");
+  }
 
   const docRef = db.collection("deposits").doc();
 

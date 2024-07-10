@@ -4,7 +4,7 @@ import {
   defer,
   redirect,
 } from "@remix-run/node";
-import { Await, json, Link, useLoaderData } from "@remix-run/react";
+import { Await, Link, useLoaderData } from "@remix-run/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { createDeposit, DepositItem, getDeposits } from "~/deposit/deposit";
@@ -12,6 +12,7 @@ import { DepositForm } from "~/deposit/DepositForm";
 import { Deposits } from "~/deposit/Deposits";
 import { Suspense } from "react";
 import { getUserSession } from "~/session.server";
+import { getUserById } from "~/auth/auth";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -22,13 +23,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ? new Date().toISOString().split("T")[0]
     : formData.get("date");
 
-  await createDeposit({
+  return await createDeposit({
     request,
     amount: Number(amount),
     date: date as string,
   });
-
-  return json({ message: "Deposit created" });
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -36,6 +35,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (!sessionUser) {
     return redirect("/login");
+  }
+
+  const userProfile = await getUserById({ request, uid: sessionUser.uid });
+  if (!userProfile) {
+    return redirect("/register");
   }
 
   const deposits = getDeposits(request);

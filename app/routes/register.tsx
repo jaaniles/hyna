@@ -10,8 +10,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const username = formData.get("username") as string;
 
-  console.log("plom?", username);
-
   if (!username) {
     return null;
   }
@@ -45,6 +43,7 @@ export default function Register() {
         </fieldset>
       </Form>
 
+      <Link to="/">Home</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/login">Login</Link>
       <Link to="/logout">Logout</Link>

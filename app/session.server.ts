@@ -34,20 +34,16 @@ export async function requireUserSession(request: Request) {
   const token = cookieSession.get("token");
 
   if (!token) {
-    throw redirect("/login");
+    return null;
   }
 
   const tokenUser = await serverAuth.verifySessionCookie(token, true);
 
   if (!tokenUser) {
-    throw redirect("/login");
+    return null;
   }
 
   const userProfile = await getSessionUserProfile(request);
-
-  if (!userProfile) {
-    throw redirect("/register");
-  }
 
   return {
     uid: tokenUser.uid,

@@ -21,13 +21,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     username: username as string,
   };
 
-  await updateProfile({ request, user });
-
-  return redirect("/profile");
+  return updateProfile({ request, user });
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { email, user } = await requireUserSession(request);
+  const userSession = await requireUserSession(request);
+
+  if (!userSession) {
+    return redirect("/login");
+  }
+
+  const { email, user } = userSession;
+
+  if (!user) {
+    return redirect("/register");
+  }
 
   return json({
     email: email,
