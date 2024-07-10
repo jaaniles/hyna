@@ -39,7 +39,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 const createDepositAction = async (request: Request, formData: FormData) => {
   const amount = formData.get("amount");
-  const date = formData.get("date");
+  const isToday = formData.get("today");
+  const date = isToday
+    ? new Date().toISOString().split("T")[0]
+    : formData.get("date");
 
   await createDeposit({
     request,
@@ -95,12 +98,14 @@ export default function Index() {
             <input type="number" name="amount" />
           </label>
 
-          <label htmlFor="enableCustomDate" {...stylex.props(styles.switch)}>
+          <label htmlFor="today" {...stylex.props(styles.switch)}>
             Today
             <Switch.Root
-              id="enableCustomDate"
+              id="today"
               defaultChecked={true}
               onCheckedChange={handleCustomDateChange}
+              name="today"
+              value="today"
               {...stylex.props(styles.switchRoot)}
             >
               <Switch.Thumb {...stylex.props(styles.thumb)} />

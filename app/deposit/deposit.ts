@@ -13,6 +13,7 @@ export async function getDeposits(request: Request) {
 
   const docSnapshot = await db
     .collection("deposits")
+    .orderBy("date", "desc")
     .where("uid", "==", sessionUser.uid)
     .get();
 
