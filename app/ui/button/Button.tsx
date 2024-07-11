@@ -75,17 +75,17 @@ const variantStyles = stylex.create({
     },
   },
   secondary: {
-    background: colors.white,
+    background: "none",
     border: border.button,
     color: {
-      default: colors.slate9,
-      ":hover": colors.slate10,
-      ":active": colors.slate12,
+      default: colors.slate12,
+      ":hover": colors.slate11,
+      ":active": colors.slate10,
     },
     borderColor: {
-      default: colors.red9,
-      ":hover": colors.red10,
-      ":active": colors.red11,
+      default: colors.slate6,
+      ":hover": colors.slate7,
+      ":active": colors.slate8,
     },
   },
 });

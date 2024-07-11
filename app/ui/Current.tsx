@@ -7,8 +7,8 @@ import { DepositItem } from "~/deposit/deposit";
 import { User } from "~/auth/auth";
 import { CreditCard } from "~/ui/CreditCard";
 import { Stack } from "~/ui/Stack";
-import { Headline } from "~/ui/typography/Headline";
 import { Text } from "~/ui/typography/Text";
+import CountUp from "react-countup";
 
 type Props = {
   user?: User;
@@ -34,7 +34,11 @@ export function Current({ user, deposits = [] }: Props) {
       <CreditCard user={user} vertical />
       <motion.div layout>
         <Stack spacing={8}>
-          {current && <Headline as="h3">$ {current.amount}</Headline>}
+          {current && (
+            <span>
+              <CountUp end={100} />
+            </span>
+          )}
           {current && <Text>{dateForCurrent}</Text>}
 
           <Stack spacing={8}>

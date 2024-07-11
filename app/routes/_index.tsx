@@ -9,6 +9,7 @@ import { Page } from "~/ui/Page";
 import { Navigation } from "~/ui/navigation/Navigation";
 import { Stack } from "~/ui/Stack";
 import { Deposits } from "~/deposit/Deposits";
+import { Toast } from "~/ui/Toast";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -44,7 +45,7 @@ export default function Index() {
     <Page>
       <Stack spacing={16}>
         <Navigation />
-        {message && <p>{message}</p>}
+        {message && <Toast description={message} />}
 
         <Current user={userProfile} deposits={deposits} />
 

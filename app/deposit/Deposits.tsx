@@ -23,7 +23,7 @@ export const Deposits = ({ deposits }: Props) => {
         </div>
       )}
 
-      <Stack spacing={8}>
+      <Stack spacing={8} style={styles.root}>
         {deposits.map((deposit: DepositItem) => {
           const d = DateTime.fromISO(deposit.date);
 
