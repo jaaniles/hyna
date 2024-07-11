@@ -26,7 +26,10 @@ export function CreditCard({ user, vertical }: Props) {
           x: -CARD_HEIGHT * 1.75,
         },
       }}
-      {...stylex.props(styles.root, vertical && styles.vertical)}
+      {...stylex.props(
+        styles.root,
+        vertical ? styles.vertical : styles.horizontal
+      )}
     >
       <div>
         <p {...stylex.props(styles.text)}>SAVINGS</p>
@@ -61,7 +64,13 @@ const styles = stylex.create({
 
     boxShadow: `0px 0px 18px 0px rgba(88,53,59,0.8)`,
   },
+  horizontal: {
+    width: 400,
+    height: CARD_HEIGHT + 35,
+  },
   vertical: {
+    width: 325,
+    height: CARD_HEIGHT,
     position: "absolute",
   },
   alignRight: {

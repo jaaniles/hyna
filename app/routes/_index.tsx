@@ -4,7 +4,7 @@ import {
   defer,
   redirect,
 } from "@remix-run/node";
-import { Await, Link, useLoaderData } from "@remix-run/react";
+import { Await, useLoaderData } from "@remix-run/react";
 
 import { createDeposit, DepositItem, getDeposits } from "~/deposit/deposit";
 import { DepositForm } from "~/deposit/DepositForm";
@@ -14,6 +14,7 @@ import { getUserSession } from "~/session.server";
 import { getUserById } from "~/auth/auth";
 import { Current } from "~/ui/Current";
 import { Page } from "~/ui/Page";
+import { Navigation } from "~/ui/navigation/Navigation";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -52,10 +53,7 @@ export default function Index() {
 
   return (
     <Page>
-      <Link to="/">Home</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/logout">Logout</Link>
+      <Navigation />
 
       <Current user={userProfile} />
 

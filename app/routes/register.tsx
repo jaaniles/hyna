@@ -1,11 +1,12 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { Form, Link, useNavigation } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 
 import { registerUser } from "~/auth/auth";
 import { getUserSession } from "~/session.server";
 import { Button } from "~/ui/button/Button";
 import { TextField } from "~/ui/fields/TextField";
 import { Fieldset } from "~/ui/form/Fieldset";
+import { Navigation } from "~/ui/navigation/Navigation";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userSession = await getUserSession(request);
@@ -36,6 +37,8 @@ export default function Register() {
     <div>
       <h1>Register form</h1>
 
+      <Navigation />
+
       <Form method="post">
         <Fieldset disabled={isSubmitting}>
           <TextField label="Username" id="username" name="username" />
@@ -45,11 +48,6 @@ export default function Register() {
           />
         </Fieldset>
       </Form>
-
-      <Link to="/">Home</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/logout">Logout</Link>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import {
   LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { DeleteDepositForm } from "~/deposit/DeleteDepositForm";
 import {
   deleteDeposit,
@@ -13,6 +13,11 @@ import {
 } from "~/deposit/deposit";
 import { EditDepositForm } from "~/deposit/EditDepositForm";
 import { requireUserSession } from "~/session.server";
+import { Navigation } from "~/ui/navigation/Navigation";
+import { Page } from "~/ui/Page";
+import { Stack } from "~/ui/Stack";
+import { Headline } from "~/ui/typography/Headline";
+import { Text } from "~/ui/typography/Text";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -74,20 +79,20 @@ export default function EditDeposit() {
   const { deposit } = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <h1>Edit deposit</h1>
+    <Page>
+      <Stack spacing={16}>
+        <Navigation />
+        <Headline as="h1">Edit deposit</Headline>
 
-      <Link to="/">Home</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/logout">Logout</Link>
+        <Text>{deposit.depositId}</Text>
+        <Text>{deposit.amount}</Text>
+        <Text>{deposit.date}</Text>
 
-      <p>{deposit.depositId}</p>
-      <p>{deposit.amount}</p>
-      <p>{deposit.date}</p>
+        <EditDepositForm deposit={deposit} />
 
-      <EditDepositForm deposit={deposit} />
-      <DeleteDepositForm deposit={deposit} />
-    </div>
+        <Headline as="h3">Delete deposit</Headline>
+        <DeleteDepositForm deposit={deposit} />
+      </Stack>
+    </Page>
   );
 }

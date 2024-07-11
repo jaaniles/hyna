@@ -4,12 +4,17 @@ import {
   LoaderFunction,
   redirect,
 } from "@remix-run/node";
-import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { updateProfile } from "~/auth/auth";
 import { requireUserSession } from "~/session.server";
 import { Button } from "~/ui/button/Button";
 import { TextField } from "~/ui/fields/TextField";
 import { Fieldset } from "~/ui/form/Fieldset";
+import { Navigation } from "~/ui/navigation/Navigation";
+import { Page } from "~/ui/Page";
+import { Stack } from "~/ui/Stack";
+import { Headline } from "~/ui/typography/Headline";
+import { Text } from "~/ui/typography/Text";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -53,26 +58,29 @@ export default function EditProfile() {
   const isUpdating = navigation.formAction === `/profile/edit`;
 
   return (
-    <div>
-      <h1>Edit profile</h1>
-      <p>You are: {username}</p>
+    <Page>
+      <Stack spacing={16}>
+        <Navigation />
+        <Headline as="h1">Edit profile</Headline>
+        <Text>You are: {username}</Text>
 
-      <Link to="/">Home</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/logout">Logout</Link>
-
-      <Form method="patch">
-        <Fieldset disabled={isUpdating}>
-          <TextField
-            label="Username"
-            id="username"
-            name="username"
-            defaultValue={username}
-          />
-          <Button type="submit" text={isUpdating ? "Updating..." : "Update"} />
-        </Fieldset>
-      </Form>
-    </div>
+        <Form method="patch">
+          <Fieldset disabled={isUpdating}>
+            <Stack spacing={8}>
+              <TextField
+                label="Username"
+                id="username"
+                name="username"
+                defaultValue={username}
+              />
+              <Button
+                type="submit"
+                text={isUpdating ? "Updating..." : "Update"}
+              />
+            </Stack>
+          </Fieldset>
+        </Form>
+      </Stack>
+    </Page>
   );
 }

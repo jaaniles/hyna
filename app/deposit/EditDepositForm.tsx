@@ -4,6 +4,7 @@ import { Button } from "~/ui/button/Button";
 import { NumberField } from "~/ui/fields/NumberField";
 import { Fieldset } from "~/ui/form/Fieldset";
 import { DateField } from "~/ui/fields/DateField";
+import { Stack } from "~/ui/Stack";
 
 type Props = {
   deposit: DepositItem;
@@ -18,26 +19,30 @@ export const EditDepositForm = ({ deposit }: Props) => {
   return (
     <Form method="patch">
       <Fieldset disabled={isUpdating}>
-        <NumberField
-          label="Amount"
-          id="amount"
-          name="amount"
-          defaultValue={deposit.amount}
-        />
-        <DateField
-          id="date"
-          label="Date"
-          name="date"
-          defaultValue={deposit.date}
-        />
-        <input type="hidden" name="depositId" value={deposit.depositId} />
+        <Stack spacing={16}>
+          <Stack spacing={8}>
+            <NumberField
+              label="Amount"
+              id="amount"
+              name="amount"
+              defaultValue={deposit.amount}
+            />
+            <DateField
+              id="date"
+              label="Date"
+              name="date"
+              defaultValue={deposit.date}
+            />
+            <input type="hidden" name="depositId" value={deposit.depositId} />
+          </Stack>
 
-        <Button
-          type="submit"
-          name="intent"
-          value="edit"
-          text={isUpdating ? "Updating..." : "Update"}
-        />
+          <Button
+            type="submit"
+            name="intent"
+            value="edit"
+            text={isUpdating ? "Updating..." : "Update"}
+          />
+        </Stack>
       </Fieldset>
     </Form>
   );
