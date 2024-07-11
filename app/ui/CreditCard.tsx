@@ -56,15 +56,13 @@ export function CreditCard({ user, vertical }: Props) {
       )}
     >
       <div>
-        <p {...stylex.props(styles.text)}>SAVINGS</p>
+        <p {...stylex.props(styles.text)}>TRACK YOUR SAVINGS</p>
       </div>
-      {user && (
-        <div>
-          <p {...stylex.props(styles.text, styles.alignRight)}>
-            {user?.username}
-          </p>
-        </div>
-      )}
+      <div>
+        <p {...stylex.props(styles.text, styles.alignRight)}>
+          {user?.username ? user.username : "HYNA CORP"}
+        </p>
+      </div>
     </motion.div>
   );
 }
@@ -92,7 +90,7 @@ const styles = stylex.create({
   horizontal: {
     maxWidth: "95vw",
     width: 375,
-    height: CARD_HEIGHT + 25,
+    height: CARD_HEIGHT,
   },
   vertical: {
     width: 325,
