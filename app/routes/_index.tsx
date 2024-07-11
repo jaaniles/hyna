@@ -1,14 +1,8 @@
-import {
-  LoaderFunction,
-  ActionFunctionArgs,
-  redirect,
-  json,
-} from "@remix-run/node";
+import { LoaderFunction, redirect, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { createDeposit, getDeposits } from "~/deposit/deposit";
-import { DepositForm } from "~/deposit/DepositForm";
-import { getUserSession } from "~/session.server";
+import { getDeposits } from "~/deposit/deposit";
+import { commitSession, getSession, getUserSession } from "~/session.server";
 import { getUserById } from "~/auth/auth";
 import { Current } from "~/ui/Current";
 import { Page } from "~/ui/Page";
@@ -16,23 +10,8 @@ import { Navigation } from "~/ui/navigation/Navigation";
 import { Stack } from "~/ui/Stack";
 import { Deposits } from "~/deposit/Deposits";
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-
-  const amount = formData.get("amount");
-  const isToday = formData.get("today");
-  const date = isToday
-    ? new Date().toISOString().split("T")[0]
-    : formData.get("date");
-
-  return await createDeposit({
-    request,
-    amount: Number(amount),
-    date: date as string,
-  });
-};
-
 export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get("Cookie"));
   const sessionUser = await getUserSession(request);
 
   if (!sessionUser) {
@@ -42,23 +21,32 @@ export const loader: LoaderFunction = async ({ request }) => {
   const userProfile = await getUserById({ request, uid: sessionUser.uid });
   const deposits = await getDeposits(request);
 
-  return json({
-    deposits,
-    userProfile,
-  });
+  const message = session.get("globalMessage") || null;
+
+  return json(
+    {
+      message,
+      deposits,
+      userProfile,
+    },
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    }
+  );
 };
 
 export default function Index() {
-  const { deposits, userProfile } = useLoaderData<typeof loader>();
+  const { message, deposits, userProfile } = useLoaderData<typeof loader>();
 
   return (
     <Page>
       <Stack spacing={16}>
         <Navigation />
+        {message && <p>{message}</p>}
 
         <Current user={userProfile} deposits={deposits} />
-
-        <DepositForm />
 
         <Deposits deposits={deposits} />
       </Stack>

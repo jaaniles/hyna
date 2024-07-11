@@ -3,12 +3,12 @@ import stylex from "@stylexjs/stylex";
 import { useState } from "react";
 import { Button } from "~/ui/button/Button";
 import { Headline } from "~/ui/typography/Headline";
-import { NumberField } from "~/ui/fields/NumberField";
 import { Fieldset } from "~/ui/form/Fieldset";
 import { SwitchField } from "~/ui/fields/SwitchField";
 import { DateField } from "~/ui/fields/DateField";
 import { Stack } from "~/ui/Stack";
 import { Text } from "~/ui/typography/Text";
+import { CurrencyField } from "~/ui/fields/CurrencyField";
 
 export const DepositForm = () => {
   const [showCustomDate, setShowCustomDate] = useState(false);
@@ -32,7 +32,7 @@ export const DepositForm = () => {
         <Fieldset disabled={isSubmitting}>
           <Stack spacing={16}>
             <Stack spacing={8}>
-              <NumberField id="amount" name="amount" label="Amount" />
+              <CurrencyField id="amount" name="amount" label="Amount" />
 
               <SwitchField
                 id="today"

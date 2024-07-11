@@ -89,5 +89,5 @@ export const fontSize = stylex.defineVars({
   headlineMedium: "25px",
   headlineSmall: "20px",
 
-  input: "12px",
+  input: "16px",
 });

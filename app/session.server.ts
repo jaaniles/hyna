@@ -14,7 +14,7 @@ export const session = createCookie("session", {
   path: "/",
 });
 
-const storage = createCookieSessionStorage({
+export const storage = createCookieSessionStorage({
   cookie: {
     name: "__session",
     // normally you want this to be `secure: true`
@@ -120,3 +120,7 @@ export async function destroySession(request: Request) {
 export async function signOut(request: Request) {
   return await destroySession(request);
 }
+
+const { getSession, commitSession } = storage;
+
+export { getSession, commitSession };

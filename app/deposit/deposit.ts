@@ -79,10 +79,10 @@ export async function createDeposit({
   }
 
   const docRef = db.collection("deposits").doc();
-
   await docRef.create({ amount, date, uid: sessionUser.uid });
 
-  return redirect("/");
+  return true;
+  //return redirect("/");
 }
 
 export async function updateDeposit({

@@ -29,6 +29,7 @@ export function Current({ user, deposits = [] }: Props) {
           {current && <Text>{current.date}</Text>}
 
           <Stack spacing={8}>
+            <Link to="/deposit">Create deposit</Link>
             <Link to="/profile">Add savings account</Link>
           </Stack>
         </Stack>
@@ -40,6 +41,5 @@ export function Current({ user, deposits = [] }: Props) {
 const styles = stylex.create({
   root: {
     position: "relative",
-    display: "flex",
   },
 });
