@@ -12,7 +12,11 @@ import {
   updateDeposit,
 } from "~/deposit/deposit";
 import { EditDepositForm } from "~/deposit/EditDepositForm";
-import { requireUserSession } from "~/session.server";
+import {
+  commitSession,
+  getSession,
+  requireUserSession,
+} from "~/session.server";
 import { Navigation } from "~/ui/navigation/Navigation";
 import { Page } from "~/ui/Page";
 import { Stack } from "~/ui/Stack";
@@ -34,6 +38,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 const updateDepositAction = async (request: Request, formData: FormData) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
   const depositId = formData.get("depositId");
   const amount = formData.get("amount");
   const date = formData.get("date");
@@ -49,7 +55,13 @@ const updateDepositAction = async (request: Request, formData: FormData) => {
     date: date as string,
   });
 
-  return redirect(`/deposit/${depositId}/edit`);
+  session.flash("globalMessage", "Deposit updated successfully!");
+
+  return redirect("/", {
+    headers: {
+      "Set-cookie": await commitSession(session),
+    },
+  });
 };
 
 const deleteDepositAction = async (request: Request, formData: FormData) => {
