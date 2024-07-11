@@ -5,6 +5,9 @@ import { requireUserSession } from "~/session.server";
 import { CreditCard } from "~/ui/CreditCard";
 import { Navigation } from "~/ui/navigation/Navigation";
 import { Page } from "~/ui/Page";
+import { Stack } from "~/ui/Stack";
+import { Headline } from "~/ui/typography/Headline";
+import { Text } from "~/ui/typography/Text";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userSession = await requireUserSession(request);
@@ -30,15 +33,18 @@ export default function Profile() {
 
   return (
     <Page>
-      <Navigation />
-      <div>
-        <h1>Profile</h1>
-        <p>{username}</p>
-        <p>{email}</p>
-        <Link to="/profile/edit">Edit profile</Link>
-      </div>
+      <Stack spacing={16}>
+        <Navigation />
 
-      <CreditCard user={{ username }} />
+        <Headline as="h1">Profile</Headline>
+        <CreditCard user={{ username }} />
+
+        <Stack spacing={8}>
+          <Text>{username}</Text>
+          <Text>{email}</Text>
+          <Link to="/profile/edit">Edit profile</Link>
+        </Stack>
+      </Stack>
     </Page>
   );
 }

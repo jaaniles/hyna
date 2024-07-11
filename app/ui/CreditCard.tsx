@@ -2,7 +2,7 @@ import stylex from "@stylexjs/stylex";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { User } from "~/auth/auth";
-import { colors, spacing } from "~/tokens.stylex";
+import { spacing } from "~/tokens.stylex";
 
 type Props = {
   user?: User;
@@ -26,8 +26,8 @@ export function CreditCard({ user, vertical }: Props) {
     <motion.div
       onClick={handleInspect}
       layoutId="credit-card"
-      initial="horizontal"
-      whileHover={"hover"}
+      initial={vertical ? "vertical" : "horizontal"}
+      whileHover={vertical ? "hover" : undefined}
       animate={animate}
       variants={{
         horizontal: {
@@ -47,7 +47,6 @@ export function CreditCard({ user, vertical }: Props) {
         },
         hover: {
           y: -5,
-          scale: 1.01,
         },
       }}
       {...stylex.props(
@@ -81,7 +80,8 @@ const styles = stylex.create({
     width: 325,
     height: CARD_HEIGHT,
 
-    background: colors.red8,
+    backgroundImage:
+      "linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8b96d6, #7e91cb, #728cbf, #6378a2, #546486, #45516b, #373f51)",
 
     padding: `${spacing._16} ${spacing._24}`,
 
@@ -91,8 +91,8 @@ const styles = stylex.create({
   },
   horizontal: {
     maxWidth: "95vw",
-    width: 400,
-    height: CARD_HEIGHT + 35,
+    width: 375,
+    height: CARD_HEIGHT + 25,
   },
   vertical: {
     width: 325,
@@ -106,6 +106,7 @@ const styles = stylex.create({
     position: "absolute",
   },
   text: {
+    userSelect: "none",
     fontWeight: 500,
     margin: 0,
     textTransform: "uppercase",

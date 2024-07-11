@@ -1,20 +1,20 @@
 import {
   LoaderFunction,
   ActionFunctionArgs,
-  defer,
   redirect,
+  json,
 } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 
-import { createDeposit, DepositItem, getDeposits } from "~/deposit/deposit";
+import { createDeposit, getDeposits } from "~/deposit/deposit";
 import { DepositForm } from "~/deposit/DepositForm";
-import { Deposits } from "~/deposit/Deposits";
-import { Suspense } from "react";
 import { getUserSession } from "~/session.server";
 import { getUserById } from "~/auth/auth";
 import { Current } from "~/ui/Current";
 import { Page } from "~/ui/Page";
 import { Navigation } from "~/ui/navigation/Navigation";
+import { Stack } from "~/ui/Stack";
+import { Deposits } from "~/deposit/Deposits";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -40,9 +40,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const userProfile = await getUserById({ request, uid: sessionUser.uid });
-  const deposits = getDeposits(request);
+  const deposits = await getDeposits(request);
 
-  return defer({
+  return json({
     deposits,
     userProfile,
   });
@@ -53,21 +53,15 @@ export default function Index() {
 
   return (
     <Page>
-      <Navigation />
+      <Stack spacing={16}>
+        <Navigation />
 
-      <Current user={userProfile} />
+        <Current user={userProfile} deposits={deposits} />
 
-      <DepositForm />
+        <DepositForm />
 
-      <Suspense fallback={<Skeleton />}>
-        <Await resolve={deposits}>
-          {(deposits) => <Deposits deposits={deposits as DepositItem[]} />}
-        </Await>
-      </Suspense>
+        <Deposits deposits={deposits} />
+      </Stack>
     </Page>
   );
 }
-
-const Skeleton = () => {
-  return <div>Loading...</div>;
-};

@@ -6,26 +6,29 @@ import { CreditCard } from "./CreditCard";
 import { User } from "~/auth/auth";
 import { motion } from "framer-motion";
 import stylex from "@stylexjs/stylex";
+import { DepositItem } from "~/deposit/deposit";
 
 type Props = {
-  user: User;
+  user?: User;
+  deposits?: DepositItem[];
 };
 
-export function Current({ user }: Props) {
+export function Current({ user, deposits = [] }: Props) {
   if (!user) {
     return null;
   }
+
+  const current = deposits.length > 0 && deposits[0];
 
   return (
     <motion.div layout {...stylex.props(styles.root)}>
       <CreditCard user={user} vertical />
       <motion.div layout>
         <Stack spacing={8}>
-          <Headline as="h3">$ 5,600</Headline>
-          <Text>11.7.2024</Text>
+          {current && <Headline as="h3">$ {current.amount}</Headline>}
+          {current && <Text>{current.date}</Text>}
 
           <Stack spacing={8}>
-            <Link to="/">Make deposit</Link>
             <Link to="/profile">Add savings account</Link>
           </Stack>
         </Stack>
