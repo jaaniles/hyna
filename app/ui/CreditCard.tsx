@@ -38,7 +38,7 @@ export function CreditCard({ user, vertical }: Props) {
         vertical: {
           scale: 1,
           rotate: 90,
-          x: -CARD_HEIGHT * 1.5,
+          x: -CARD_HEIGHT * 1.55,
         },
         inspect: {
           scale: 1,
@@ -67,6 +67,8 @@ export function CreditCard({ user, vertical }: Props) {
   );
 }
 
+const MOBILE = "@media (max-width: 619px)";
+
 const styles = stylex.create({
   root: {
     display: "flex",
@@ -84,13 +86,16 @@ const styles = stylex.create({
     padding: `${spacing._16} ${spacing._24}`,
 
     borderRadius: 32,
-
-    boxShadow: `0px 0px 18px 0px rgba(88,53,59,0.8)`,
   },
   horizontal: {
-    maxWidth: "95vw",
-    width: 375,
-    height: CARD_HEIGHT,
+    width: {
+      default: 325,
+      [MOBILE]: 275,
+    },
+    height: {
+      default: CARD_HEIGHT,
+      [MOBILE]: 145,
+    },
   },
   vertical: {
     width: 325,
