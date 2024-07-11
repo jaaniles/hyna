@@ -42,7 +42,7 @@ export default function Index() {
   const { message, deposits, userProfile } = useLoaderData<typeof loader>();
 
   return (
-    <Page>
+    <Page sidespace>
       <Stack spacing={16}>
         <Navigation />
         {message && <Toast description={message} />}

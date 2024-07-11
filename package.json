@@ -13,6 +13,7 @@
   "dependencies": {
     "@fontsource/raleway": "^5.0.19",
     "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-toast": "^1.1.0",
     "@remix-run/node": "^2.10.2",
     "@remix-run/react": "^2.10.2",
     "@remix-run/serve": "^2.10.2",

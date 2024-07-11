@@ -38,7 +38,7 @@ export function CreditCard({ user, vertical }: Props) {
         vertical: {
           scale: 1,
           rotate: 90,
-          x: -CARD_HEIGHT * 1.75,
+          x: -CARD_HEIGHT * 1.5,
         },
         inspect: {
           scale: 1,
