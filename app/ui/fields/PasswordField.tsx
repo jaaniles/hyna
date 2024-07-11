@@ -1,5 +1,5 @@
+import { PasswordInput } from "~/ui/inputs/PasswordInput";
 import { Stack } from "~/ui/Stack";
-import { PasswordInput } from "../inputs/PasswordInput";
 
 type Props = {
   id: string;

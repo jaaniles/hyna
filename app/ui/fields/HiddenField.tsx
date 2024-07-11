@@ -1,5 +1,5 @@
+import { HiddenInput } from "~/ui/inputs/HiddenInput";
 import { Stack } from "~/ui/Stack";
-import { HiddenInput } from "../inputs/HiddenInput";
 
 type Props = {
   id: string;

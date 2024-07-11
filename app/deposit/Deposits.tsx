@@ -1,9 +1,11 @@
 import { Link, useNavigation } from "@remix-run/react";
-import { DepositItem } from "./deposit";
 import stylex from "@stylexjs/stylex";
+import { DateTime } from "luxon";
+
 import { Text } from "~/ui/typography/Text";
 import { colors } from "~/tokens.stylex";
 import { Stack } from "~/ui/Stack";
+import { DepositItem } from "~/deposit/deposit";
 
 type Props = {
   deposits: DepositItem[];
@@ -11,7 +13,6 @@ type Props = {
 
 export const Deposits = ({ deposits }: Props) => {
   const navigation = useNavigation();
-
   const isCreating = navigation.formAction === "/?index";
 
   return (
@@ -24,13 +25,21 @@ export const Deposits = ({ deposits }: Props) => {
 
       <Stack spacing={8}>
         {deposits.map((deposit: DepositItem) => {
+          const d = DateTime.fromISO(deposit.date);
+
           return (
             <Link
               key={deposit.depositId}
               to={`/deposit/${deposit.depositId}/edit`}
             >
               <div {...stylex.props(styles.deposit)}>
-                <Text>{deposit.date}</Text>
+                <Text>
+                  {d.toLocaleString({
+                    month: "long",
+                    day: "2-digit",
+                    year: "numeric",
+                  })}
+                </Text>
                 <Text>$ {deposit.amount}</Text>
               </div>
             </Link>

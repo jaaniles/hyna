@@ -1,12 +1,14 @@
 import { Link } from "@remix-run/react";
-import { Stack } from "./Stack";
-import { Headline } from "./typography/Headline";
-import { Text } from "./typography/Text";
-import { CreditCard } from "./CreditCard";
-import { User } from "~/auth/auth";
 import { motion } from "framer-motion";
 import stylex from "@stylexjs/stylex";
+import { DateTime } from "luxon";
+
 import { DepositItem } from "~/deposit/deposit";
+import { User } from "~/auth/auth";
+import { CreditCard } from "~/ui/CreditCard";
+import { Stack } from "~/ui/Stack";
+import { Headline } from "~/ui/typography/Headline";
+import { Text } from "~/ui/typography/Text";
 
 type Props = {
   user?: User;
@@ -19,6 +21,13 @@ export function Current({ user, deposits = [] }: Props) {
   }
 
   const current = deposits.length > 0 && deposits[0];
+  const dateForCurrent =
+    current &&
+    DateTime.fromISO(current.date).toLocaleString({
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+    });
 
   return (
     <motion.div layout {...stylex.props(styles.root)}>
@@ -26,7 +35,7 @@ export function Current({ user, deposits = [] }: Props) {
       <motion.div layout>
         <Stack spacing={8}>
           {current && <Headline as="h3">$ {current.amount}</Headline>}
-          {current && <Text>{current.date}</Text>}
+          {current && <Text>{dateForCurrent}</Text>}
 
           <Stack spacing={8}>
             <Link to="/deposit">Create deposit</Link>

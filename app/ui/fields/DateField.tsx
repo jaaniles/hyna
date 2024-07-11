@@ -1,5 +1,5 @@
+import { DateInput } from "~/ui/inputs/DateInput";
 import { Stack } from "~/ui/Stack";
-import { DateInput } from "../inputs/DateInput";
 
 type Props = {
   id: string;

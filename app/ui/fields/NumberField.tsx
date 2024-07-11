@@ -1,5 +1,5 @@
+import { NumberInput } from "~/ui/inputs/NumberInput";
 import { Stack } from "~/ui/Stack";
-import { NumberInput } from "../inputs/NumberInput";
 
 type Props = {
   id: string;

@@ -1,5 +1,5 @@
+import { EmailInput } from "~/ui/inputs/EmailInput";
 import { Stack } from "~/ui/Stack";
-import { EmailInput } from "../inputs/EmailInput";
 
 type Props = {
   id: string;

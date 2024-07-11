@@ -1,10 +1,11 @@
 import { Form, useNavigation } from "@remix-run/react";
-import { DepositItem } from "./deposit";
+
 import { Button } from "~/ui/button/Button";
 import { NumberField } from "~/ui/fields/NumberField";
 import { Fieldset } from "~/ui/form/Fieldset";
 import { DateField } from "~/ui/fields/DateField";
 import { Stack } from "~/ui/Stack";
+import { DepositItem } from "~/deposit/deposit";
 
 type Props = {
   deposit: DepositItem;

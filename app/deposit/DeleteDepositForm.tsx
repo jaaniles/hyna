@@ -1,5 +1,5 @@
 import { Form, useNavigation } from "@remix-run/react";
-import { DepositItem } from "./deposit";
+import { DepositItem } from "~/deposit/deposit";
 import { Button } from "~/ui/button/Button";
 
 type Props = {

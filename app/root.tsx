@@ -13,7 +13,7 @@ import "@fontsource/raleway/500.css";
 import "@fontsource/raleway/600.css";
 
 import "./root.css";
-import { PageLoadingIndicator } from "./ui/loading/PageLoadingIndicator";
+import { PageLoadingIndicator } from "~/ui/loading/PageLoadingIndicator";
 
 export const meta: MetaFunction = () => {
   return [

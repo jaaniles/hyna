@@ -1,4 +1,4 @@
-import { Input } from "./Input";
+import { Input } from "~/ui/inputs/Input";
 
 type Props = {
   id: string;
