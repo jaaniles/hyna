@@ -8,6 +8,9 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import "@fontsource/raleway/400.css";
+import "@fontsource/raleway/500.css";
+import "@fontsource/raleway/600.css";
 
 import "./root.css";
 import { PageLoadingIndicator } from "./ui/loading/PageLoadingIndicator";

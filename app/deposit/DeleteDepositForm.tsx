@@ -1,5 +1,6 @@
 import { Form, useNavigation } from "@remix-run/react";
 import { DepositItem } from "./deposit";
+import { Button } from "~/ui/button/Button";
 
 type Props = {
   deposit: DepositItem;
@@ -14,9 +15,12 @@ export const DeleteDepositForm = ({ deposit }: Props) => {
   return (
     <Form method="delete" key={`${deposit.depositId}`}>
       <input type="hidden" name="depositId" value={deposit.depositId} />
-      <button type="submit" name="intent" value="delete">
-        {isDeleting ? "Deleting..." : "Delete"}
-      </button>
+      <Button
+        type="submit"
+        name="intent"
+        value="delete"
+        text={isDeleting ? "Deleting..." : "Delete"}
+      />
     </Form>
   );
 };

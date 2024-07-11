@@ -23,8 +23,6 @@ export async function getDeposits(request: Request) {
 
   const data: DepositItem[] = [];
 
-  console.log("DOKKO SNAPSHOTTO?", docSnapshot);
-
   if (docSnapshot.empty) {
     return [];
   }

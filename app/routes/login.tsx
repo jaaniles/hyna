@@ -1,16 +1,22 @@
 import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import * as stylex from "@stylexjs/stylex";
+import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
   UserCredential,
 } from "firebase/auth";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useState } from "react";
 
 import { auth } from "~/firebase.client";
 import { createUserSession, getUserSession } from "~/session.server";
+import { Button } from "~/ui/button/Button";
+import { CreditCard } from "~/ui/CreditCard";
+import { EmailField } from "~/ui/fields/EmailField";
+import { PasswordField } from "~/ui/fields/PasswordField";
+import { Page } from "~/ui/Page";
+import { Stack } from "~/ui/Stack";
+import { Headline } from "~/ui/typography/Headline";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -32,11 +38,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { loggedIn } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const target = e.target as typeof e.target & {
       email: { value: string };
@@ -56,8 +65,13 @@ export default function Login() {
 
       fetcher.submit({ idToken }, { method: "post", action: "/login" });
     } catch (err) {
+      setIsSubmitting(false);
       console.log(err);
     }
+  };
+
+  const handleEmailChange = (e: SyntheticEvent) => {
+    setEmail((e.target as HTMLInputElement).value);
   };
 
   const handleGoogleLogin = () => {
@@ -70,63 +84,43 @@ export default function Login() {
   }
 
   return (
-    <div {...stylex.props(styles.root)}>
-      <h1>This is login</h1>
-      {loggedIn && <p>You are already logged in by the way</p>}
+    <Page>
+      <Stack spacing={72}>
+        <Stack spacing={32}>
+          <div>
+            <Headline as="h1">Login</Headline>
+            {loggedIn && <p>You are already logged in by the way</p>}
+          </div>
 
-      <button onClick={handleGoogleLogin}>Sign in with Google</button>
+          <CreditCard user={{ username: email }} />
 
-      <form onSubmit={handleSubmit} {...stylex.props(styles.form)}>
-        <div>
-          <label htmlFor="email">email</label>
-          <input
-            {...stylex.props(styles.input)}
-            type="email"
-            id="email"
-            name="email"
+          <Button
+            type="button"
+            onClick={handleGoogleLogin}
+            text={"Sign in with Google"}
           />
-        </div>
-        <div>
-          <label htmlFor="password">password</label>
-          <input
-            {...stylex.props(styles.input)}
-            type="password"
-            id="password"
-            name="password"
-          />
-        </div>
-        <button {...stylex.props(styles.submit)} type="submit">
-          Submit
-        </button>
-      </form>
-    </div>
+        </Stack>
+
+        <Form onSubmit={handleSubmit}>
+          <Stack spacing={8}>
+            <div>
+              <EmailField
+                id="email"
+                name="email"
+                label="Email"
+                onChange={handleEmailChange}
+              />
+            </div>
+            <div>
+              <PasswordField label="Password" id="password" name="password" />
+            </div>
+            <Button
+              type="submit"
+              text={isSubmitting ? "Submitting.." : "Submit"}
+            />
+          </Stack>
+        </Form>
+      </Stack>
+    </Page>
   );
 }
-
-const styles = stylex.create({
-  root: {
-    background: "#fbfbfb",
-
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-
-    padding: 64,
-  },
-
-  form: {
-    width: "100%",
-    borderRadius: 8,
-  },
-  input: {
-    width: "100%",
-  },
-
-  submit: {
-    width: 150,
-
-    background: "white",
-    borderRadius: 4,
-    border: "2px solid black",
-  },
-});

@@ -1,2 +1,20 @@
 @import url("reset.css");
+
+
+body {
+  font-family: "Raleway", sans-serif;
+}
+
+a {
+  color: #f4acb7;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+  &:active {
+    color: #8f5761;
+  }
+}
+
 @stylex stylesheet;

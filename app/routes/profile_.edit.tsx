@@ -7,6 +7,9 @@ import {
 import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
 import { updateProfile } from "~/auth/auth";
 import { requireUserSession } from "~/session.server";
+import { Button } from "~/ui/button/Button";
+import { TextField } from "~/ui/fields/TextField";
+import { Fieldset } from "~/ui/form/Fieldset";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -60,13 +63,15 @@ export default function EditProfile() {
       <Link to="/logout">Logout</Link>
 
       <Form method="patch">
-        <fieldset disabled={isUpdating}>
-          <label htmlFor="username">
-            Username
-            <input type="text" name="username" defaultValue={username} />
-          </label>
-          <button type="submit">{isUpdating ? "Updating..." : "Update"}</button>
-        </fieldset>
+        <Fieldset disabled={isUpdating}>
+          <TextField
+            label="Username"
+            id="username"
+            name="username"
+            defaultValue={username}
+          />
+          <Button type="submit" text={isUpdating ? "Updating..." : "Update"} />
+        </Fieldset>
       </Form>
     </div>
   );

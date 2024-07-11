@@ -3,6 +3,9 @@ import { Form, Link, useNavigation } from "@remix-run/react";
 
 import { registerUser } from "~/auth/auth";
 import { getUserSession } from "~/session.server";
+import { Button } from "~/ui/button/Button";
+import { TextField } from "~/ui/fields/TextField";
+import { Fieldset } from "~/ui/form/Fieldset";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userSession = await getUserSession(request);
@@ -34,13 +37,13 @@ export default function Register() {
       <h1>Register form</h1>
 
       <Form method="post">
-        <fieldset disabled={isSubmitting}>
-          <label htmlFor="username">username</label>
-          <input type="text" id="username" name="username" />
-          <button type="submit">
-            {isSubmitting ? "Registering..." : "Register"}
-          </button>
-        </fieldset>
+        <Fieldset disabled={isSubmitting}>
+          <TextField label="Username" id="username" name="username" />
+          <Button
+            type="submit"
+            text={isSubmitting ? "Registering..." : "Register"}
+          />
+        </Fieldset>
       </Form>
 
       <Link to="/">Home</Link>

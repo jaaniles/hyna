@@ -4,15 +4,16 @@ import {
   defer,
   redirect,
 } from "@remix-run/node";
-import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
-import * as stylex from "@stylexjs/stylex";
+import { Await, Link, useLoaderData } from "@remix-run/react";
 
 import { createDeposit, DepositItem, getDeposits } from "~/deposit/deposit";
 import { DepositForm } from "~/deposit/DepositForm";
 import { Deposits } from "~/deposit/Deposits";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { getUserSession } from "~/session.server";
-import { getUserById, User } from "~/auth/auth";
+import { getUserById } from "~/auth/auth";
+import { Current } from "~/ui/Current";
+import { Page } from "~/ui/Page";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -37,7 +38,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/login");
   }
 
-  const userProfile = getUserById({ request, uid: sessionUser.uid });
+  const userProfile = await getUserById({ request, uid: sessionUser.uid });
   const deposits = getDeposits(request);
 
   return defer({
@@ -50,13 +51,13 @@ export default function Index() {
   const { deposits, userProfile } = useLoaderData<typeof loader>();
 
   return (
-    <div {...stylex.props(styles.root)}>
-      <h1>Entry</h1>
-
+    <Page>
       <Link to="/">Home</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/login">Login</Link>
       <Link to="/logout">Logout</Link>
+
+      <Current user={userProfile} />
 
       <DepositForm />
 
@@ -64,35 +65,11 @@ export default function Index() {
         <Await resolve={deposits}>
           {(deposits) => <Deposits deposits={deposits as DepositItem[]} />}
         </Await>
-        <Await resolve={userProfile}>
-          {(userProfile: User) => <RequireProfile userProfile={userProfile} />}
-        </Await>
       </Suspense>
-    </div>
+    </Page>
   );
 }
-
-const RequireProfile = ({ userProfile }: { userProfile: User }) => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!userProfile) {
-      navigate("/register");
-    }
-  }, [userProfile, navigate]);
-
-  return null;
-};
 
 const Skeleton = () => {
   return <div>Loading...</div>;
 };
-
-const styles = stylex.create({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: 64,
-  },
-});

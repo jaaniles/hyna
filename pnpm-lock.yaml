@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/raleway':
+        specifier: ^5.0.19
+        version: 5.0.19
       '@radix-ui/react-switch':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -751,6 +754,9 @@ packages:
 
   '@firebase/webchannel-wrapper@1.0.1':
     resolution: {integrity: sha512-jmEnr/pk0yVkA7mIlHNnxCi+wWzOFUg0WyIotgkKAb2u1J7fAeDBcVNSTjTihbAYNusCLQdW5s9IJ5qwnEufcQ==}
+
+  '@fontsource/raleway@5.0.19':
+    resolution: {integrity: sha512-S4fAg/Kmvkw5g6Z2eoxGijeYcopsfQIla+iXbOYZsIUaFHcS49l/qBNO3MWZ8iJ+PCFulz9juv2OjPPvMW43oA==}
 
   '@google-cloud/firestore@7.9.0':
     resolution: {integrity: sha512-c4ALHT3G08rV7Zwv8Z2KG63gZh66iKdhCBeDfCpIkLrjX6EAjTD/szMdj14M+FnQuClZLFfW5bAgoOjfNmLtJg==}
@@ -4831,6 +4837,8 @@ snapshots:
       tslib: 2.6.3
 
   '@firebase/webchannel-wrapper@1.0.1': {}
+
+  '@fontsource/raleway@5.0.19': {}
 
   '@google-cloud/firestore@7.9.0':
     dependencies:

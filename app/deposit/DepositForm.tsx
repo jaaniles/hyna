@@ -1,7 +1,14 @@
 import { Form, useNavigation } from "@remix-run/react";
-import * as Switch from "@radix-ui/react-switch";
 import stylex from "@stylexjs/stylex";
 import { useState } from "react";
+import { Button } from "~/ui/button/Button";
+import { Headline } from "~/ui/typography/Headline";
+import { NumberField } from "~/ui/fields/NumberField";
+import { Fieldset } from "~/ui/form/Fieldset";
+import { SwitchField } from "~/ui/fields/SwitchField";
+import { DateField } from "~/ui/fields/DateField";
+import { Stack } from "~/ui/Stack";
+import { Text } from "~/ui/typography/Text";
 
 export const DepositForm = () => {
   const [showCustomDate, setShowCustomDate] = useState(false);
@@ -16,42 +23,42 @@ export const DepositForm = () => {
   const isSubmitting = navigation.formAction === "/?index";
 
   return (
-    <div>
-      <h1>Deposit</h1>
-
+    <Stack spacing={16}>
+      <Stack spacing={8}>
+        <Headline as="h2">Create a deposit</Headline>
+        <Text>Record your savings</Text>
+      </Stack>
       <Form method="post" {...stylex.props(styles.form)}>
-        <fieldset disabled={isSubmitting}>
-          <label htmlFor="amount">
-            Amount:
-            <input type="number" name="amount" />
-          </label>
+        <Fieldset disabled={isSubmitting}>
+          <Stack spacing={16}>
+            <Stack spacing={8}>
+              <NumberField id="amount" name="amount" label="Amount" />
 
-          <label htmlFor="today" {...stylex.props(styles.switch)}>
-            Today
-            <Switch.Root
-              id="today"
-              defaultChecked={true}
-              onCheckedChange={handleCustomDateChange}
-              name="today"
-              value="today"
-              {...stylex.props(styles.switchRoot)}
-            >
-              <Switch.Thumb {...stylex.props(styles.thumb)} />
-            </Switch.Root>
-          </label>
+              <SwitchField
+                id="today"
+                name="today"
+                label="Today"
+                defaultValue={true}
+                onChange={handleCustomDateChange}
+              />
 
-          <div {...stylex.props(!showCustomDate && styles.hidden)}>
-            <label htmlFor="date">
-              Date: <input type="date" name="date" defaultValue={today} />
-            </label>
-          </div>
-
-          <button type="submit">
-            {isSubmitting ? "Creating..." : "Create"}
-          </button>
-        </fieldset>
+              <div {...stylex.props(!showCustomDate && styles.hidden)}>
+                <DateField
+                  id="date"
+                  label="Date"
+                  name="date"
+                  defaultValue={today}
+                />
+              </div>
+            </Stack>
+            <Button
+              type="submit"
+              text={isSubmitting ? "Creating..." : "Create"}
+            />
+          </Stack>
+        </Fieldset>
       </Form>
-    </div>
+    </Stack>
   );
 };
 
@@ -59,33 +66,6 @@ const styles = stylex.create({
   form: {
     display: "flex",
     flexDirection: "column",
-  },
-  switch: {
-    display: "flex",
-    alignItems: "center",
-  },
-  switchRoot: {
-    width: 42,
-    height: 25,
-    position: "relative",
-    borderRadius: 16,
-  },
-  thumb: {
-    display: "block",
-    width: 21,
-    height: 21,
-
-    marginBottom: 15,
-
-    backgroundColor: "white",
-    borderRadius: 16,
-
-    transition: "transform 100ms ease-in-out",
-    willChange: "transform",
-    transform: {
-      default: "translateX(0px)",
-      ":is([data-state='checked'])": "translateX(10px)",
-    },
   },
   hidden: {
     display: "none",
