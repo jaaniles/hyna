@@ -21,10 +21,10 @@ const DESKTOP = "@media (max-width: 1239px)";
 
 const styles = stylex.create({
   root: {
-    maxWidth: 350,
-
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
 
     padding: spacing._32,
   },

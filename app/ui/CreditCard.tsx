@@ -2,7 +2,7 @@ import stylex from "@stylexjs/stylex";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { User } from "~/auth/auth";
-import { spacing } from "~/tokens.stylex";
+import { colors, spacing } from "~/tokens.stylex";
 
 type Props = {
   user?: User;
@@ -56,13 +56,18 @@ export function CreditCard({ user, vertical }: Props) {
       )}
     >
       <div>
-        <p {...stylex.props(styles.text)}>TRACK YOUR SAVINGS</p>
+        <p {...stylex.props(styles.text)}>HYNA Basic</p>
       </div>
       <div>
-        <p {...stylex.props(styles.text, styles.alignRight)}>
-          {user?.username ? user.username : "HYNA CORP"}
-        </p>
+        <p {...stylex.props(styles.text, styles.print)}>000 1234 000 1234</p>
+        <p {...stylex.props(styles.text, styles.print)}>{user?.username}</p>
       </div>
+      <div>
+        <p
+          {...stylex.props(styles.text, styles.alignRight, styles.hynaTextLogo)}
+        >{`HYNA CORP™`}</p>
+      </div>
+      <div {...stylex.props(styles.decoration)} />
     </motion.div>
   );
 }
@@ -71,6 +76,8 @@ const MOBILE = "@media (max-width: 619px)";
 
 const styles = stylex.create({
   root: {
+    position: "relative",
+    overflow: "hidden",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -81,11 +88,11 @@ const styles = stylex.create({
     height: CARD_HEIGHT,
 
     backgroundImage:
-      "linear-gradient(to left top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8b96d6, #7e91cb, #728cbf, #6378a2, #546486, #45516b, #373f51)",
+      "linear-gradient(to right top, #4b4453, #684663, #8d4463, #ae4254, #c34a36)",
+    padding: `${spacing._16} ${spacing._8} ${spacing._8} ${spacing._24}`,
+    border: `1px solid ${colors.slate4}`,
 
-    padding: `${spacing._16} ${spacing._24}`,
-
-    borderRadius: 32,
+    borderRadius: 16,
   },
   horizontal: {
     width: {
@@ -110,9 +117,29 @@ const styles = stylex.create({
   },
   text: {
     userSelect: "none",
-    fontWeight: 500,
+    fontWeight: 600,
     margin: 0,
     textTransform: "uppercase",
-    letterSpacing: "0.2em",
+    letterSpacing: "0.25em",
+  },
+  print: {
+    textShadow:
+      "1px 1px 0px rgba(255, 255, 0, 0.3), 0 0 0 #000, 1px 2px 3px #000",
+  },
+  hynaTextLogo: {
+    transform: "skew(-15deg)",
+  },
+  decoration: {
+    borderTopLeftRadius: "45%",
+    borderBottomRightRadius: 16,
+
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    content: "''",
+    width: 125,
+    height: 75,
+    filter: "blur(2px)",
+    background: "rgba(255, 150, 150,0.11)",
   },
 });

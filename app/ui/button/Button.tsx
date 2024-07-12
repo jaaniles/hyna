@@ -33,7 +33,7 @@ export function Button({
       aria-disabled={disabled}
       onClick={onClick}
     >
-      <Text>{text}</Text>
+      <Text size="lg">{text}</Text>
     </button>
   );
 }
@@ -53,6 +53,9 @@ const styles = stylex.create({
     paddingLeft: spacing._24,
     paddingRight: spacing._24,
     cursor: { default: "initial", ":hover": "pointer" },
+
+    fontFamily: "Raleway",
+    fontWeight: 500,
   },
   hidden: {
     opacity: 0,
