@@ -43,7 +43,7 @@ export const Deposits = ({ deposits }: Props) => {
                 style={styles.spaceBetween}
               >
                 <Text size="lg">$ {deposit.amount}</Text>
-                <Link to={`/deposit/${deposit.depositId}`}>
+                <Link to={`/deposit/${deposit.depositId}/edit`}>
                   <Text>EDIT</Text>
                 </Link>
               </Stack>

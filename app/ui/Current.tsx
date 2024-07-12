@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react";
 import { motion } from "framer-motion";
 import stylex from "@stylexjs/stylex";
-import { DateTime } from "luxon";
 
 import { DepositItem } from "~/deposit/deposit";
 import { User } from "~/auth/auth";
@@ -21,22 +20,16 @@ export function Current({ user, deposits = [] }: Props) {
   }
 
   const current = deposits.length > 0 && deposits[0];
-  const dateForCurrent =
-    current &&
-    DateTime.fromISO(current.date).toLocaleString({
-      month: "long",
-      day: "2-digit",
-      year: "numeric",
-    });
 
   return (
     <motion.div layout {...stylex.props(styles.root)}>
       <CreditCard user={user} vertical />
       <motion.div layout>
         <Stack spacing={8}>
-          <Headline as="h1">Current balance</Headline>
+          <Headline as="h1" size="md">
+            Current balance
+          </Headline>
           {current && <Text size="lg">$ {current.amount}</Text>}
-          {current && <Text>{dateForCurrent}</Text>}
 
           <Stack spacing={8}>
             <Link to="/deposit">Create deposit</Link>
