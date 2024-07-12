@@ -30,10 +30,10 @@ const styles = stylex.create({
   },
   sidespace: {
     padding: {
-      default: `${spacing._32} ${spacing._98}`,
-      [MOBILE]: `${spacing._32} ${spacing._72}`,
-      [TABLET]: `${spacing._32} ${spacing._72}`,
-      [DESKTOP]: `${spacing._32} ${spacing._98}`,
+      default: `${spacing._48} ${spacing._98}`,
+      [MOBILE]: `${spacing._48} ${spacing._72}`,
+      [TABLET]: `${spacing._48} ${spacing._72}`,
+      [DESKTOP]: `${spacing._48} ${spacing._98}`,
     },
   },
 });

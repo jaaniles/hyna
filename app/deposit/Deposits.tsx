@@ -33,14 +33,18 @@ export const Deposits = ({ deposits }: Props) => {
               to={`/deposit/${deposit.depositId}/edit`}
             >
               <div {...stylex.props(styles.deposit)}>
-                <Text>
-                  {d.toLocaleString({
-                    month: "long",
-                    day: "2-digit",
-                    year: "numeric",
-                  })}
-                </Text>
-                <Text>$ {deposit.amount}</Text>
+                <Stack direction="horizontal" spacing={8}>
+                  <Stack direction="horizontal" spacing={16}>
+                    <Text>
+                      {d.toLocaleString({
+                        month: "long",
+                        day: "2-digit",
+                        year: "numeric",
+                      })}
+                    </Text>
+                  </Stack>
+                  <Text>$ {deposit.amount}</Text>
+                </Stack>
               </div>
             </Link>
           );

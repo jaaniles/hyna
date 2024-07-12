@@ -34,7 +34,8 @@ export function Current({ user, deposits = [] }: Props) {
       <CreditCard user={user} vertical />
       <motion.div layout>
         <Stack spacing={8}>
-          {current && <Headline as="h3">$ {current.amount}</Headline>}
+          <Headline as="h1">Current balance</Headline>
+          {current && <Text size="lg">$ {current.amount}</Text>}
           {current && <Text>{dateForCurrent}</Text>}
 
           <Stack spacing={8}>
