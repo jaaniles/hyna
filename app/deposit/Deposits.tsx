@@ -3,9 +3,9 @@ import stylex from "@stylexjs/stylex";
 import { DateTime } from "luxon";
 
 import { Text } from "~/ui/typography/Text";
-import { colors } from "~/tokens.stylex";
 import { Stack } from "~/ui/Stack";
 import { DepositItem } from "~/deposit/deposit";
+import { Headline } from "~/ui/typography/Headline";
 
 type Props = {
   deposits: DepositItem[];
@@ -23,30 +23,31 @@ export const Deposits = ({ deposits }: Props) => {
         </div>
       )}
 
-      <Stack spacing={8} style={styles.root}>
+      <Stack spacing={32} style={styles.root}>
         {deposits.map((deposit: DepositItem) => {
           const d = DateTime.fromISO(deposit.date);
 
           return (
-            <Link
-              key={deposit.depositId}
-              to={`/deposit/${deposit.depositId}/edit`}
-            >
-              <div {...stylex.props(styles.deposit)}>
-                <Stack direction="horizontal" spacing={8}>
-                  <Stack direction="horizontal" spacing={16}>
-                    <Text>
-                      {d.toLocaleString({
-                        month: "long",
-                        day: "2-digit",
-                        year: "numeric",
-                      })}
-                    </Text>
-                  </Stack>
-                  <Text>$ {deposit.amount}</Text>
-                </Stack>
-              </div>
-            </Link>
+            <Stack spacing={8} key={deposit.depositId} style={styles.deposit}>
+              <Headline as="h3" size="sm">
+                {d.toLocaleString({
+                  month: "long",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </Headline>
+              <Stack
+                direction="horizontal"
+                alignVertical="center"
+                spacing={8}
+                style={styles.spaceBetween}
+              >
+                <Text size="lg">$ {deposit.amount}</Text>
+                <Link to={`/deposit/${deposit.depositId}`}>
+                  <Text>EDIT</Text>
+                </Link>
+              </Stack>
+            </Stack>
           );
         })}
       </Stack>
@@ -66,15 +67,9 @@ const styles = stylex.create({
   root: {
     width: "100%",
   },
-  link: {
-    width: "100%",
-  },
-  deposit: {
-    display: "flex",
-    flexDirection: "column",
-
-    background: colors.slate2,
-    padding: 24,
+  deposit: {},
+  spaceBetween: {
+    justifyContent: "space-between",
   },
   skeleton: {
     height: 100,
